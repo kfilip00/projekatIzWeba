@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Studentska evidencija</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("studenti")}}>Studenti <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href={{url_for("predmeti")}}>Predmeti </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("korisnici")}}>Korisnici </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <a href={{url_for("logout")}} class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </form>
+    </div>
+</nav>
+
+<br/><br/>
+
+<div class="container">
+    <div class="">
+        <p class="h1">Izmeni ocenu:</p>
+    </div>
+    <div class="row justify-content-left">
+        <div class="col-lg-6 col-xs-12">
+            <form action= {{ url_for("ocena_izmena", id=ocena.ocena_id) }} method="POST">
+                <div class="form-group">
+                    <label>Ocena</label>
+                    <select class="custom-select" name="ocena">
+                        <option {% if(ocena.ocena==6) %} selected {% endif %}value="6">6</option>
+                        <option {% if(ocena.ocena==7) %} selected {% endif %}value="7">7</option>
+                        <option {% if(ocena.ocena==8) %} selected {% endif %}value="8">8</option>
+                        <option {% if(ocena.ocena==9) %} selected {% endif %}value="9">9</option>
+                        <option {% if(ocena.ocena==10) %} selected {% endif %}value="10">10</option>
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-primary" role="button" value="Sacuvaj">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

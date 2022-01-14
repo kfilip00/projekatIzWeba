@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Studentska evidencija</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("studenti")}}>Studenti <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link active" href={{url_for("predmeti")}}>Predmeti </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("korisnici")}}>Korisnici </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <a href={{url_for("logout")}} class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </form>
+    </div>
+</nav>
+
+<br/><br/>
+
+<div class="container">
+    <div class="">
+        <p class="h1">Izmeni predmet</p>
+    </div>
+    <div class="row justify-content-left">
+        <div class="col-lg-6 col-xs-12">
+            <form action={{url_for("predmet_izmena",sifra=predmet.id)}} method="POST">
+                <div class="form-group">
+                    <label>Sifra</label>
+                    <input type="input" name="inputSifra" value={{predmet.sifra}} class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Naziv</label>
+                    <input type="input" name="inputNaziv" value={{predmet.naziv}} class="form-control" required>
+                </div>
+               <div class="form-group">
+                    <label>Godina studija</label>
+                    <input type="input" name="inputGodinaStudija" value={{predmet.godina_studija}} class="form-control" required>
+               </div>
+               <div class="form-group">
+                    <label>ESPB</label>
+                    <input type="input" name="inputESPB" value={{predmet.espb}} class="form-control" required>
+               </div>
+               <div class="form-group">
+                    <label>Obavezni/Izborni</label><br/>
+                   <select class="custom-select" name="inputStatusPredmeta">
+                       <option {% if(predmet.obavezni_izborni=="") %}selected {% endif %}>Status predmeta</option>
+                       <option {% if(predmet.obavezni_izborni=="Obavezni") %} selected {% endif %}value="Obavezan">Obavezni</option>
+                       <option {% if(predmet.obavezni_izborni=="Izborni") %} selected {% endif %}value="Izborni">Izborni</option>
+                    </select>
+               </div>
+
+                <br/>
+                <input type="submit" class="btn btn-primary" role="button" value="Sacuvaj">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

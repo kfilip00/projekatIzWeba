@@ -1,0 +1,14 @@
+#slika_pregled {
+    height: 150px;
+    width: 150px;
+    border-radius: 150px;
+    background-color: #999999;
+    object-fit: cover;
+}
+#slika_preview {
+    height: 50px;
+    width: 50px;
+    border-radius: 150px;
+    background-color: #999999;
+    object-fit: cover;
+}

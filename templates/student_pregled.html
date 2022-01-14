@@ -1,0 +1,389 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Studentska evidencija</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if(rola!='student') %}
+            <li class="nav-item">
+                <a class="nav-link active" href={{url_for("studenti")}}>Studenti <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if( rola=="administrator") %}
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("predmeti")}}>Predmeti </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("korisnici")}}>Korisnici </a>
+            </li>
+            {% endif %}
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <a href={{url_for("logout")}} class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-6 mt-5">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td colspan="2" align="center">
+                        <img
+                                {% if student.slika=="" %}
+                                    src="/static/slike/userImagePlaceHolder.png"
+
+                                {%else%}
+                                    src="/static/uploads/{{ student.slika }}"
+                                {%endif%}
+                                    id="slika_pregled" />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Ime</th>
+                    <td>{{student.ime}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Ime roditelja</th>
+                    <td>{{student.ime_roditelja}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Prezime</th>
+                    <td>{{student.prezime}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Broj indeksa</th>
+                    <td>{{student.broj_indeksa}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Broj telefona</th>
+                    <td>{{student.broj_telefona}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Email</th>
+                    <td>{{student.email}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Datum rodjenja</th>
+                    <td>{{student.datum_rodjenja}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">JMBG</th>
+                    <td>{{student.jmbg}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Ukupno ESPB</th>
+                    <td>{{student.espb}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Prosek ocena</th>
+                    <td>{{student.prosek_ocena}}</td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Akcije</th>
+                    <td>
+                        {% if(rola!="profesor") %}
+                        <a href={{url_for("student_izmena",id=student.id)}} role="button" class="text-warning mx-1">
+                            <i class="far fa-edit"></i>
+                        </a>
+                        {% endif %}
+                        {% if(rola=="administrator") %}
+                        <a data-toggle="modal" data-target="#deleteModalStudent{{student.id}}" role="button" class="text-danger mx-1">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <div class="modal fade" id="deleteModalStudent{{student.id}}" tabindex="-1" aria-hidden="true" >
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                Da li sigurno zelite da obrisete studenta {{student.ime}} {{student.prezime}}?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                                <a href={{url_for("student_obrisi",id=student.id)}} role="button"
+                                   class="btn btn-danger">Obrisi</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </tbody>
+            </table>
+        </div>
+        {% if(rola!="student") %}
+        <div class="col-6 mt-5">
+            <form action={{url_for("oceni",id=student.id)}} method="POST">
+                <div class="form-group">
+                    <label>Predmet</label>
+                    <select name="predmet" class="custom-select">
+                        <option value="default" disabled selected>Odaberi predmet</option>
+                        {% for predmet in predmeti %}
+                        <option value={{predmet.id}} >{{predmet.naziv}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ocena</label>
+                    <select name="ocena" class="custom-select" required>
+                        <option value="6" selected>6</option>
+                        <option value="7" >7</option>
+                        <option value="8" >8</option>
+                        <option value="9" >9</option>
+                        <option value="10" >10</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Datum</label>
+                    <input type="date" name="datum" class="form-control" required>
+                </div>
+                <div class="d-flex align-items-center justify-content-center">
+                    <input type="submit" class="btn btn-primary" role="button" value="Dodaj ocenu">
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="row my-5 justify-content-end">
+                <a href={{url_for('export', tip="ocene",id=student.id)}} role="button" class="btn btn-success mr-3">Export ocene</a>
+            </div>
+            <table class="table">
+                <form action={{url_for("student_pregled" ,id=student.id)}} method="GET">
+                    <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="input-group input-group-sm">
+                                <input value="{{ args.sifra }}" name="sifra"
+                                       placeholder="Sifra predmeta" type="text" class="form-control">
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="input-group input-group-sm">
+                                <select name="godina_studija" class="form-control">
+                                    <option value="">Godina studija</option>
+                                    <option {%if args.godina_studija =='1'%}selected{% endif %}
+                                    value="1">1</option>
+                                    <option {%if args.godina_studija =='2'%}selected{% endif %}
+                                    value="2">2</option>
+                                    <option {%if args.godina_studija =='3'%}selected{% endif %}
+                                    value="3">3</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="inline">
+                                <div class="input-group input-group-sm mr-3">
+                                    <input value="{{ args.ocena_od }}" name="ocena_od"
+                                           placeholder="Ocena od" type="text" class="form-control">
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <input value="{{ args.ocena_do }}" name="ocena_do"
+                                           placeholder="Ocena do" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="inline">
+                                <div class="input-group input-group-sm mr-3">
+                                    <input value="{{ args.espb_od }}" name="espb_od"
+                                           placeholder="ESPB od" type="text" class="form-control">
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <input value="{{ args.espb_do }}" name="espb_do"
+                                           placeholder="ESPB do" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="input-group input-group-sm">
+                                <select name="obavezni_izborni" class="form-control">
+                                    <option value="">Obavezni izborni</option>
+                                    <option {%if args.obavezni_izborni =='Obavezan' %}selected{% endif %}
+                                    value="Obavezan">Obavezni</option>
+                                    <option {%if args.obavezni_izborni =='Izborni'%}selected{% endif %}
+                                    value="Izborni">Izborni</option>
+
+                                </select>
+                            </div>
+                        </th>
+                        <th scope="col">
+                            <div class="inline-btns">
+                                <button type="submit" class="btn btn-primary btn-sm mr-3">Pretraži</button>
+                                <a role="button" class="btn btn-secondary btn-sm" href="{{url_for('student_pregled',id=student.id) }}" >Poništi</a>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                <label for="order_by_sifra" class="header-btn">
+                                    Sifra
+                                </label>
+                                <input style="display: none;" id="order_by_sifra"
+                                       value="sifra" class="header-btn"
+                                       type="submit" name="order_by"
+                                />
+
+                                {% if order_type == 'asc' and args.order_by == 'sifra' %}
+                                <i class="fas fa-sort-up"></i>
+                                {% elif order_type == 'desc' and args.order_by == 'sifra' %}
+                                <i class="fas fa-sort-down"></i>
+                                {% else %}
+                                <i class="fas fa-sort light-icon"></i>
+                                {% endif %}
+                            </th>
+                            <th scope="col">
+                                <label for="order_by_naziv" class="header-btn">
+                                    Naziv
+                                </label>
+                                <input style="display: none;" id="order_by_naziv"
+                                       value="naziv" class="header-btn"
+                                       type="submit" name="order_by"
+                                />
+
+                                {% if order_type == 'asc' and args.order_by == 'naziv' %}
+                                <i class="fas fa-sort-up"></i>
+                                {% elif order_type == 'desc' and args.order_by == 'naziv' %}
+                                <i class="fas fa-sort-down"></i>
+                                {% else %}
+                                <i class="fas fa-sort light-icon"></i>
+                                {% endif %}
+                            </th>
+                            <th scope="col">
+                                <label for="order_by_godina_studija" class="header-btn">
+                                    Godina studija
+                                </label>
+                                <input style="display: none;" id="order_by_godina_studija"
+                                       value="godina_studija" class="header-btn"
+                                       type="submit" name="order_by"
+                                />
+
+                                {% if order_type == 'asc' and args.order_by == 'godina_studija' %}
+                                <i class="fas fa-sort-up"></i>
+                                {% elif order_type == 'desc' and args.order_by == 'godina_studija' %}
+                                <i class="fas fa-sort-down"></i>
+                                {% else %}
+                                <i class="fas fa-sort light-icon"></i>
+                                {% endif %}
+                            </th>
+                            <th scope="col">
+                                <label for="order_by_obavezni_izborni" class="header-btn">
+                                    Obavezni/Izborni
+                                </label>
+                                <input style="display: none;" id="order_by_obavezni_izborni"
+                                       value="obavezni_izborni" class="header-btn"
+                                       type="submit" name="order_by"
+                                />
+
+                                {% if order_type == 'asc' and args.order_by == 'obavezni_izborni' %}
+                                <i class="fas fa-sort-up"></i>
+                                {% elif order_type == 'desc' and args.order_by == 'obavezni_izborni' %}
+                                <i class="fas fa-sort-down"></i>
+                                {% else %}
+                                <i class="fas fa-sort light-icon"></i>
+                                {% endif %}
+                            </th>
+                            <th scope="col">
+                                <label for="order_by_espb" class="header-btn">
+                                    ESPB
+                                </label>
+                                <input style="display: none;" id="order_by_espb"
+                                       value="espb" class="header-btn"
+                                       type="submit" name="order_by"
+                                />
+
+                                {% if order_type == 'asc' and args.order_by == 'espb' %}
+                                <i class="fas fa-sort-up"></i>
+                                {% elif order_type == 'desc' and args.order_by == 'espb' %}
+                                <i class="fas fa-sort-down"></i>
+                                {% else %}
+                                <i class="fas fa-sort light-icon"></i>
+                                {% endif %}
+                            </th>
+                            <th scope="col">
+                                <label for="order_by_ocena" class="header-btn">
+                                    Ocena
+                                </label>
+                                <input style="display: none;" id="order_by_ocena"
+                                       value="ocena" class="header-btn"
+                                       type="submit" name="order_by"
+                                />
+
+                                {% if order_type == 'asc' and args.order_by == 'ocena' %}
+                                <i class="fas fa-sort-up"></i>
+                                {% elif order_type == 'desc' and args.order_by == 'ocena' %}
+                                <i class="fas fa-sort-down"></i>
+                                {% else %}
+                                <i class="fas fa-sort light-icon"></i>
+                                {% endif %}
+                            </th>
+                            {% if(rola=="administrator") %}
+                            <th scope="col">Akcije</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <input name="prethodni_order_by" value="{{ args.order_by }}" hidden />
+                    <input name="order_type" value="{{ order_type }}" hidden />
+                    <input name="page" value="{{ strana }}" hidden />
+                </form>
+                <tbody>
+                {% for ocena in ocene %}
+                <tr class="table-active">
+                    <td>{{ocena.sifra}}</td>
+                    <td>{{ocena.naziv}}</td>
+                    <td>{{ocena.godina_studija}}</td>
+                    <td>{{ocena.obavezni_izborni}}</td>
+                    <td>{{ocena.espb}}</td>
+                    <td>{{ocena.ocena}}</td>
+                    {% if(rola=="administrator") %}
+                    <td colspan="2">
+                        <a href= {{url_for("ocena_izmena",id=ocena.ocena_id)}} role="button" class="text-warning mx-1">
+                            <i class="far fa-edit"></i>
+                        </a>
+                        <a data-toggle="modal" data-target="#deleteModalOcena{{ocena.id}}" role="button" class="text-danger mx-1">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+
+                    </td>
+                    {% endif %}
+                </tr>
+                <div class="modal fade" id="deleteModalOcena{{ocena.id}}" tabindex="-1" aria-hidden="true" >
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                Da li  sigurno zelite da obrisete ocenu {{ocena.naziv}}({{ocena.ocena}})?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                                <a href={{url_for("ocena_obrisi",id=ocena.ocena_id)}} role="button"
+                                   class="btn btn-danger">Obrisi</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

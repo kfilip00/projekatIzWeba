@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Studentska evidencija</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("studenti")}}>Studenti <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("predmeti")}}>Predmeti </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link active" href={{url_for("korisnici")}}>Korisnici </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <a href={{url_for("logout")}} class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </form>
+    </div>
+</nav>
+
+<br/><br/>
+
+<div class="container">
+    <div class="">
+        <p class="h1">Novi korisnik</p>
+    </div>
+    <div class="row justify-content-left">
+        <div class="col-lg-6 col-xs-12">
+            <form action="{{url_for('korisnik_novi')}}" method="POST">
+                <div class="form-group">
+                    <label>Ime</label>
+                    <input type="input" name="inputIme" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Prezime</label>
+                    <input type="input" name="inputPrezime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="inputEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Lozinka</label>
+                    <input type="password" name="inputPassword" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Rola</label>
+                    <select name="inputRola" class="form-control">
+                        <option selected disabled>--Izabetire rolu--</option>
+                        <option value="administrator">Administrator</option>
+                        <option value="profesor">Profesor</option>
+                        <option value="student">Student</option>
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-primary" role="button" value="Sacuvaj">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

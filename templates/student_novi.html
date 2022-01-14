@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Studentska evidencija</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href={{url_for("studenti")}}>Studenti <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("predmeti")}}>Predmeti </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for("korisnici")}}>Korisnici </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <a href={{url_for("logout")}} class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </form>
+    </div>
+</nav>
+
+<br/><br/>
+
+<div class="container">
+    <div class="">
+        <p class="h1">Novi student</p>
+    </div>
+    <div class="row justify-content-left col-lg-8">
+        <div class="col-lg-6 col-xs-12">
+            <form action={{url_for("student_novi",podaci=podaci)}} method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="slika">
+                        <img id="slika_pregled"
+                             {% if(student.slika) %}
+                                src="/static/uploads/{{ student.slika }}">
+                             {% else %}
+                                src="/static/slike/userImagePlaceHolder.png">
+                             {% endif %}
+                    </label>
+                    <br/>
+                    <label for="slika" class="btn btn-primary">
+                        Odaberi sliku
+                    </label>
+                    <input type="file" accept="image/*" class="custom-file-input" hidden id="slika" name="slika">
+                </div>
+                <div class="form-group">
+                    <label>Broj indeksa</label>
+                    <input type="input" name="inputBrIndeksa" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Ime</label>
+                    <input type="input" value={{podaci["ime"]}} name="inputIme" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Ime roditelja</label>
+                    <input type="input" name="inputImeRoditelja" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Prezime</label>
+                    <input type="input" value={{podaci["prezime"]}} name="inputPrezime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value={{podaci["email"]}} name="inputEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Broj telefona</label>
+                    <input type="input" name="inputBrojTelefona" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Godina studija</label>
+                    <input type="input" value="1" name="inputGodinaStudija" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Broj ESPB bodova</label>
+                    <input type="input" value="0" name="inputESPB" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Prosek ocena</label>
+                    <input type="input" value="0" name="inputProsekOcena" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Datum rodjenja</label>
+                    <input type="date" name="inputDatumRodjenja" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>JMBG</label>
+                    <input type="number" name="inputJMBG" class="form-control" required>
+                </div>
+
+                <br/>
+                <input type="submit" class="btn btn-primary" role="button" value="Sacuvaj">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
